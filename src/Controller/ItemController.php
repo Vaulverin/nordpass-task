@@ -39,7 +39,7 @@ class ItemController extends AbstractController
      * @Route("/item", name="item_create", methods={"POST"})
      * @IsGranted("ROLE_USER")
      */
-    public function create(Request $request, ItemService $itemService)
+    public function create(Request $request, ItemService $itemService): JsonResponse
     {
         $data = $request->get('data');
 
@@ -56,10 +56,10 @@ class ItemController extends AbstractController
      * @Route("/item/{id}", name="items_delete", methods={"DELETE"})
      * @IsGranted("ROLE_USER")
      */
-    public function delete(Request $request, int $id)
+    public function delete(Request $request, int $id): JsonResponse
     {
         if (empty($id)) {
-            return $this->json(['error' => 'No data parameter'], Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'No id parameter'], Response::HTTP_BAD_REQUEST);
         }
 
         $item = $this->getDoctrine()->getRepository(Item::class)->find($id);
