@@ -36,6 +36,7 @@ class ItemServiceTest extends TestCase
         $data = 'secret data';
 
         $expectedObject = new Item();
+        $expectedObject->setData($data);
         $expectedObject->setUser($user);
 
         $this->entityManager->expects($this->once())->method('persist')->with($expectedObject);
