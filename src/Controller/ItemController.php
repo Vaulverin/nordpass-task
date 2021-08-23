@@ -8,11 +8,11 @@ use App\Entity\Item;
 use App\Service\ItemService;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 
 class ItemController extends AbstractController
 {
@@ -25,12 +25,12 @@ class ItemController extends AbstractController
         $data = $request->get('data');
 
         if (empty($data)) {
-            throw new BadRequestException('No data parameter');
+            throw new BadRequestHttpException('No data parameter');
         }
         return $data;
     }
     /**
-     * @Route("/item", name="item_list", methods={"GET"})
+     * @Route("/item", name="items_list", methods={"GET"}, format="json")
      * @IsGranted("ROLE_USER")
      */
     public function list(): JsonResponse
@@ -62,17 +62,25 @@ class ItemController extends AbstractController
         return $this->json([]);
     }
 
-    public function update(Request $request, int $id, ItemService $itemService): JsonResponse
+    /**
+     * @Route("/item", name="item_update", methods={"PUT"}, format="json")
+     * @IsGranted("ROLE_USER")
+     */
+    public function update(Request $request, ItemService $itemService): JsonResponse
     {
+        $id = $request->get('id');
+        if (empty($id)) {
+            throw new BadRequestException('No id parameter');
+        }
         $data = $this->validateDataParameter($request);
 
-        $itemService->update($this->getUser(), $id, $data);
+        $itemService->update($this->getUser(), (int)$id, $data);
 
         return $this->json([]);
     }
     
     /**
-     * @Route("/item/{id}", name="items_delete", methods={"DELETE"})
+     * @Route("/item/{id}", name="item_delete", methods={"DELETE"}, format="json")
      * @IsGranted("ROLE_USER")
      */
     public function delete(Request $request, int $id): JsonResponse
