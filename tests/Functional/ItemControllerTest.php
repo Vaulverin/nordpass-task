@@ -33,4 +33,14 @@ class ItemControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertStringContainsString('very secure new item data', $client->getResponse()->getContent());
     }
+    
+    public function testUpdate()
+    {
+    
+    }
+    
+    public function testDelete()
+    {
+    
+    }
 }

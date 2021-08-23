@@ -15,6 +15,7 @@
         "symfony/security-core": "5.1.*",
         "symfony/security-guard": "5.1.*",
         "symfony/security-http": "5.1.*",
+        "symfony/serializer-pack": "^1.0",
         "symfony/yaml": "5.1.*"
     },
     "require-dev": {
