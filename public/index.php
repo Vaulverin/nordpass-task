@@ -22,6 +22,13 @@ if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
 if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
     Request::setTrustedHosts([$trustedHosts]);
 }
+$keys = [
+    'PRIVATE_KEY' => ".decrypt.private.php",
+    'PUBLIC_KEY' => ".encrypt.public.php",
+];
+foreach ($keys as $name => $file) {
+    $_SERVER[$name] = base64_encode(require dirname(__DIR__)."/config/secrets/{$_SERVER['APP_ENV']}/{$_SERVER['APP_ENV']}".$file);
+}
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 $request = Request::createFromGlobals();

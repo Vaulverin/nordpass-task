@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use App\helpers\Crypto;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ItemRepository;
+use Doctrine\ORM\UnexpectedResultException;
 
 /**
  * @ORM\Entity(repositoryClass=ItemRepository::class)
@@ -46,15 +48,20 @@ class Item
         return $this->id;
     }
 
+    /**
+     * @throws \SodiumException
+     */
     public function getData(): ?string
     {
-        return $this->data;
+        return Crypto::decrypt($this->data);
     }
 
+    /**
+     * @throws \SodiumException
+     */
     public function setData(string $data): self
     {
-        $this->data = $data;
-
+        $this->data = Crypto::encrypt($data);
         return $this;
     }
 
