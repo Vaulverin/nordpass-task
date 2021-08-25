@@ -34,7 +34,7 @@ Body (json):
     "password": "maxsecure"
 }
  ```
-####Response:
+#### Response:
 Status: `200 OK`\
 Body:
 ```json
@@ -58,13 +58,13 @@ Body (json):
     "password": "maxsecure"
 }
  ```
-####Response:
+#### Response:
 Status: `200 OK`\
 Right now it redirects to the root page, which does not exist, so it gives 404 error.
 
 #### [GET] `/item`
 Returns all items for logged in user.\
-####Response:
+#### Response:
 Status: `200 OK`\
 Body:
 ```json
@@ -84,7 +84,7 @@ Headers:
 - Content-type: `multipart/form-data;`
 
 Body (form data): `data="new item secret"`
-####Response:
+#### Response:
 Status: `200 OK`\
 Body: `[]`
 
@@ -96,14 +96,14 @@ Headers:
 Body (form data): 
  - `id="77"`
  - `data="new secret"`
-####Response:
+#### Response:
 Status: `200 OK`\
 Body: `[]`
 
 
 #### [DELETE] `/item/<id>`
 Deletes existing item by ID.
-####Response:
+#### Response:
 Status: `200 OK`\
 Body: `[]`
 
