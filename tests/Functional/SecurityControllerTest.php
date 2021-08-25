@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Entity\User;
+use App\DataFixtures\UserFixture;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityControllerTest extends WebTestCase
 {
@@ -30,11 +28,11 @@ class SecurityControllerTest extends WebTestCase
     {
         $this->assertEquals(
             $statusCode, $response->getStatusCode(),
-            $response->getContent()
+            'Status codes do not match'
         );
         $this->assertTrue(
             $response->headers->contains('Content-Type', 'application/json'),
-            $response->headers
+            'Content type is different than application/json'
         );
     }
     
@@ -46,38 +44,22 @@ class SecurityControllerTest extends WebTestCase
     
     public function testLogin()
     {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = static::$container->get(EntityManagerInterface::class);
-        /** @var UserPasswordEncoderInterface $passwordEncoder */
-        $passwordEncoder = static::$container->get(UserPasswordEncoderInterface::class);
-        
-        $username = 'test';
-        $password = 'test';
-        $user = new User();
-        $user->setUsername($username);
-        $user->setPassword($passwordEncoder->encodePassword($user, $password));
-        $entityManager->persist($user);
-        $entityManager->flush();
-        
-        $response = $this->runLoginRequest($username, $password);
+        $response = $this->runLoginRequest(UserFixture::TEST_USERNAME, UserFixture::TEST_USER_PASSWORD);
         $this->assertJsonResponse($this->client->getResponse());
         $this->assertIsArray($response);
         $this->assertArrayHasKey('username', $response);
         $this->assertArrayHasKey('roles', $response);
-        $this->assertEquals($username, $response['username']);
+        $this->assertEquals(UserFixture::TEST_USERNAME, $response['username'], 'Username does not match');
         $this->assertIsArray($response['roles']);
-        $this->assertTrue(in_array('ROLE_USER', $response['roles']));
-        
-        $entityManager->remove($user);
-        $entityManager->flush();
+        $this->assertTrue(in_array('ROLE_USER', $response['roles']), 'User\'s role is missing');
     }
     
     public function testLogout()
     {
         $this->client->request('POST', '/login', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'username' => 'test',
-            'password' => 'test'
+            'username' => UserFixture::TEST_USERNAME,
+            'password' => UserFixture::TEST_USER_PASSWORD
         ]));
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful('Logout request failed');
     }
 }

@@ -18,7 +18,7 @@ class ItemService
         $this->entityManager = $entityManager;
     }
 
-    public function create(User $user, string $data): ItemService
+    public function create(User $user, string $data): Item
     {
         $item = new Item();
         $item->setUser($user);
@@ -27,10 +27,10 @@ class ItemService
         $this->entityManager->persist($item);
         $this->entityManager->flush();
         
-        return $this;
+        return $item;
     }
     
-    public function update(User $user, int $id, string $data): ItemService
+    public function update(User $user, int $id, string $data): Item
     {
         /** @var Item $item */
         $item = $this->entityManager->getRepository(Item::class)->findOneBy([
@@ -44,6 +44,6 @@ class ItemService
         $this->entityManager->persist($item);
         $this->entityManager->flush();
 
-        return $this;
+        return $item;
     }
 } 

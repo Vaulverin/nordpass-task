@@ -89,7 +89,10 @@ class ItemController extends AbstractController
             throw new BadRequestException('No id parameter');
         }
 
-        $item = $this->getDoctrine()->getRepository(Item::class)->find($id);
+        $item = $this->getDoctrine()->getRepository(Item::class)->findOneBy([
+            'user' => $this->getUser(),
+            'id' => $id
+        ]);
 
         if ($item === null) {
             throw new BadRequestException('No item');
